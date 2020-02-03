@@ -218,4 +218,4 @@ Query.prototype.normalize = function (options) {
   return result;
 };
 
-export default Query;
+export { Query };

@@ -277,7 +277,7 @@ function parseGently() {
 
 function Parser() {}
 
-Parser.prototype.parseQuery = parse;
-Parser.prototype.parseGently = parseGently;
+Parser.parseQuery = parse;
+Parser.parseGently = parseGently;
 
-export default Parser;
+export { Parser };
