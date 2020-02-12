@@ -1,0 +1,17 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  
+  <script src="rql.js"></script>
+  <script type="application/javascript">
+    var query = RQL.Parser.parseQuery("study(and(and(ge(Mica_study.start,1990),match(test,Mica_study.contact)),in(Mica_study.populations-selectionCriteria-countriesIso,AND)))");
+
+    console.log(query);
+  </script>
+</body>
+</html>
