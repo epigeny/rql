@@ -144,6 +144,35 @@ Query.prototype.walk = function (fn, options) {
   walk.call(this, this.name, this.args);
 };
 
+/**
+ * Searches the Query tree by applying the input condition.
+ * If condition function returns true, the corresponding query is returned, null otherwise
+ */
+Query.prototype.search = function (fnCondition) {
+  function search(query) {
+    if (!query || !(query instanceof Query)) {
+      return null;
+    };
+
+    if (fnCondition.apply(this, [query.name, query.args])) {
+      return query;
+    }
+    
+    let i = 0;
+    let found = null;    
+    let args = query.args || [];
+
+    for (; i < args.length && !found; i++) {
+      found = search.apply(this, [args[i]]);
+    }
+
+    return found;
+  }
+  
+  return search.apply(this, [this]);
+};
+
+
 /* append a new term */
 Query.prototype.push = function (term) {
   this.args.push(term);

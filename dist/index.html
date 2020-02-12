@@ -9,9 +9,11 @@
   
   <script src="rql.js"></script>
   <script type="application/javascript">
-    var query = RQL.Parser.parseQuery("study(and(and(ge(Mica_study.start,1990),match(test,Mica_study.contact)),in(Mica_study.populations-selectionCriteria-countriesIso,AND)))");
+    const query = RQL.Parser.parseQuery("study(and(and(ge(Mica_study.start,1990),match(test,Mica_study.contact)),in(Mica_study.populations-selectionCriteria-countriesIso,AND)))");
+    const andQuery = query.search((name, args) => "and" === name && "and" === args[0].name);
+    const inQuery = andQuery.search((name, args) => args.indexOf("AND")> -1);
 
-    console.log(query);
+    console.log(`Result found : ${inQuery != null}`);
   </script>
 </body>
 </html>
