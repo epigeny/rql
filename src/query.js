@@ -1,4 +1,5 @@
 import { each } from "./rql-util";
+import { converters } from "./parser"; 
 
 const knownOperators = ["sort", "match", "in", "out", "or", "and", "select", "contains", "excludes", "values", "limit", "distinct", "recurse", "aggregate", "between", "sum", "mean", "max", "min", "count", "first", "one", "eq", "ne", "le", "ge", "lt", "gt"];
 const knownScalarOperators = ["mean", "sum", "min", "max", "count", "first", "one"];
@@ -39,7 +40,7 @@ function encodeString(s) {
 function encodeValue(val) {
   var encoded;
   if (val === null) val = 'null';
-  if (val !== parser.converters["default"]("" + (
+  if (val !== converters["default"]("" + (
     val.toISOString && val.toISOString() || val.toString()
   ))) {
     var type = typeof val;
@@ -143,35 +144,6 @@ Query.prototype.walk = function (fn, options) {
   }
   walk.call(this, this.name, this.args);
 };
-
-/**
- * Searches the Query tree by applying the input condition.
- * If condition function returns true, the corresponding query is returned, null otherwise
- */
-Query.prototype.search = function (fnCondition) {
-  function search(query) {
-    if (!query || !(query instanceof Query)) {
-      return null;
-    };
-
-    if (fnCondition.apply(this, [query.name, query.args])) {
-      return query;
-    }
-    
-    let i = 0;
-    let found = null;    
-    let args = query.args || [];
-
-    for (; i < args.length && !found; i++) {
-      found = search.apply(this, [args[i]]);
-    }
-
-    return found;
-  }
-  
-  return search.apply(this, [this]);
-};
-
 
 /* append a new term */
 Query.prototype.push = function (term) {
