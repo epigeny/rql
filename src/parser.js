@@ -247,13 +247,13 @@ function parse(/*String|Object*/query, parameters) {
     }
   }
   function removeParentProperty(obj) {
-    if (obj && obj.args) {
-      delete obj.parent;
-      var args = obj.args;
-      for (var i = 0, l = args.length; i < l; i++) {
-        removeParentProperty(args[i]);
-      }
-    }
+    // if (obj && obj.args) {
+    //   delete obj.parent;
+    //   var args = obj.args;
+    //   for (var i = 0, l = args.length; i < l; i++) {
+    //     removeParentProperty(args[i]);
+    //   }
+    // }
     return obj;
   };
   removeParentProperty(topTerm);
@@ -280,4 +280,4 @@ function Parser() {}
 Parser.parseQuery = parse;
 Parser.parseGently = parseGently;
 
-export { Parser };
+export { Parser, converters };

@@ -9,11 +9,27 @@
   
   <script src="rql.js"></script>
   <script type="application/javascript">
-    const query = RQL.Parser.parseQuery("study(and(and(ge(Mica_study.start,1990),match(test,Mica_study.contact)),in(Mica_study.populations-selectionCriteria-countriesIso,AND)))");
-    const andQuery = query.search((name, args) => "and" === name && "and" === args[0].name);
-    const inQuery = andQuery.search((name, args) => args.indexOf("AND")> -1);
 
-    console.log(`Result found : ${inQuery != null}`);
+    const query = RQL.Parser.parseQuery("study(in(Mica_study.methods-design,cohort_study)),variable(or(or(match(DIAB,Mica_variable.name),in(Mlstr_additional.Source,Questionnaire)),in(Mlstr_area.Lifestyle_behaviours,(Phys_act,Tobacco,Alcohol))))");
+    const tree = new RQL.QueryTree(
+      query,
+      {containers: ['variable', 'dataset', 'study', 'network']}
+    );
+    
+    let target = tree.search((name, args) => args.indexOf("DIAB") > -1);
+    tree.deleteQuery(target);
+
+    target = tree.search((name, args) => args.indexOf("Questionnaire") > -1)
+    tree.deleteQuery(target);
+
+    target = tree.search((name, args) => args.indexOf("Mlstr_area.Lifestyle_behaviours") > -1)
+    tree.deleteQuery(target);
+
+    target = tree.search((name, args) => args.indexOf("cohort_study") > -1)
+    tree.deleteQuery(target);
+
+    console.log(query.toString());
+
   </script>
 </body>
 </html>

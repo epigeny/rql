@@ -1,4 +1,5 @@
 import { Query } from "./query";
 import { Parser } from "./parser";
+import QueryTree from "./query-tree";
 
-export { Query, Parser };
+export { Query, Parser, QueryTree };
