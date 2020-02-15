@@ -67,9 +67,9 @@ function encodeValue(val) {
   return val;
 }
 
-function Query(name) {
+function Query(name, args) {
   this.name = name || "and";
-  this.args = [];
+  this.args = args || [];
 }
 
 Query.prototype.toString = function () {
@@ -77,6 +77,12 @@ Query.prototype.toString = function () {
     serializeArgs(this.args, "&") :
     queryToString(this);
 };
+
+Query.serializeArgs = function(query, separator) {
+  return query.name === "and" ?
+    serializeArgs(query.args, separator ? separator : '&') :
+    queryToString(query);
+}
 
 function updateQueryMethods() {
   each(knownOperators, function (name) {
