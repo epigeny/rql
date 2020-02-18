@@ -166,6 +166,10 @@ export default class QueryTree {
     return Query.serializeArgs(this._root, ',');
   }
 
+  asTree(query) {
+    return new QueryTree(query, this.options);
+  }
+
   get root() {
     return this._root;
   }
