@@ -1,4 +1,4 @@
-import { Query } from './query'
+import Query from './query'
 
 /**
  * Performs CRUD operations on a query tree

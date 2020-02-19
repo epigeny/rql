@@ -1,5 +1,5 @@
 import { contains } from "./rql-util";
-import { Query } from "./query";
+import Query from "./query";
 
 const operatorMap = {
   "=": "eq",
@@ -280,4 +280,5 @@ function Parser() {}
 Parser.parseQuery = parse;
 Parser.parseGently = parseGently;
 
-export { Parser, converters };
+export default Parser;
+export { converters };

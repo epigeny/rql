@@ -225,4 +225,4 @@ Query.prototype.normalize = function (options) {
   return result;
 };
 
-export { Query };
+export default Query;
