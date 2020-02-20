@@ -130,6 +130,33 @@ export default class QueryTree {
 
     console.error("Could not find query to delete.")
   }
+
+    
+  /**
+   * Traverses the Query tree and calls the visitor callback.
+   * 
+   * @param fnVisitor - visitor callback must be of the form : (query) => {...}
+   */
+
+  visit(fnVisitor) {
+    function __visit(query) {
+      if (!query || !(query instanceof Query)) {
+        return;
+      };
+
+      fnVisitor.call(this, query);
+            
+      let i = 0;
+      let args = query.args || [];
+
+      for (; i < args.length; i++) {
+        __visit.call(this, args[i]);
+      }
+
+    }
+    
+    __visit.call(this, this._root);    
+  }
   
   /**
    * Searches the Query tree by applying the input filter.
@@ -139,7 +166,7 @@ export default class QueryTree {
    */
 
   search(fnCriteria) {
-    function search(query) {
+    function __search(query) {
       if (!query || !(query instanceof Query)) {
         return null;
       };
@@ -153,13 +180,13 @@ export default class QueryTree {
       let args = query.args || [];
 
       for (; i < args.length && !found; i++) {
-        found = search.apply(this, [args[i]]);
+        found = __search.apply(this, [args[i]]);
       }
 
       return found;
     }
     
-    return search.apply(this, [this._root]);    
+    return __search.apply(this, [this._root]);    
   }
 
   serialize() {

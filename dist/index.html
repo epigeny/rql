@@ -9,9 +9,16 @@
   
   <script src="rql.js"></script>
   <script type="application/javascript">
-
-    // const query = RQL.Parser.parseQuery("study(in(Mica_study.methods-design,cohort_study)),variable(or(or(match(DIAB,Mica_variable.name),in(Mlstr_additional.Source,Questionnaire)),in(Mlstr_area.Lifestyle_behaviours,(Phys_act,Tobacco,Alcohol))))");
     const options = {containers: ['variable', 'dataset', 'study', 'network']}
+
+    const query = RQL.Parser.parseQuery("variable(or(or(or(in(Mlstr_area.Sociodemographic_economic_characteristics,(Twin,Citizenship)),in(Mlstr_area.Lifestyle_behaviours,Transportation)),in(Mlstr_area.Health_status_functional_limitations,Qual_life)),in(Mlstr_area.Diseases,Blood_immune_dis))),dataset(in(Mica_dataset.className,StudyDataset)),study(in(Mica_study.id,clsa))");
+    const tree1 = new RQL.QueryTree(query, options);
+
+    tree1.visit((query) => {
+      console.log(`Visited ${query.name} Parent ${query.parent ? query.parent.name : ""}`);
+    });
+
+
     const tree = new RQL.QueryTree(null, options);
 
     const varQ = new RQL.Query('variable');    
