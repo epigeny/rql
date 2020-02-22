@@ -17,7 +17,7 @@ export default class QueryTree {
    * 
    * @param query 
    */
-  __isVipQuery(query) {
+  __isContainerQuery(query) {
     return this._options.containers.indexOf(query.name) > -1;
   }
 
@@ -42,10 +42,10 @@ export default class QueryTree {
         parent.args.splice.apply(parent.args, [index, 0].concat(query.args));
 
         if (parent.args.length < 2) {
-          if (!this.__isVipQuery(parent)) {
+          if (!this.__isContainerQuery(parent)) {
             this.__adoptChildren(parent);
           } else if (parent.args.length === 0) {
-            this.deleteQuery(parent);
+            this.__deleteContainerQuery(parent);
           }
         }        
       }
@@ -97,13 +97,26 @@ export default class QueryTree {
     console.error("Could not find query to delete.");
   }
 
+  __deleteContainerQuery(query) {
+    let parent = query.parent;
+    if (parent && this.__isContainerQuery(query)) {
+      const index = parent.args.indexOf(query);
+      if (index > -1) {
+        parent.args.splice(index, 1);
+        query.parent = null;
+      }
+    }
+  }
+
   /**
    * Deletes the input query from the tree.
    * 
    * @param query 
    */
   deleteQuery(query) {
-    let parent = query.parent;      
+    let parent = query.parent;
+    if (!parent) return;
+
     const index = parent.args.indexOf(query);
     
     if (index > -1) {
@@ -111,7 +124,13 @@ export default class QueryTree {
       query.parent = null;
 
       if (parent.args.length < 2) {
-        this.__adoptChildren(parent);
+        if (this.__isContainerQuery(parent)) {
+          if (parent.args.length < 1) {
+            this.__deleteContainerQuery(parent);
+          }
+        } else {
+          this.__adoptChildren(parent);
+        }        
       }
     }
   }
@@ -162,7 +181,7 @@ export default class QueryTree {
    * Searches the Query tree by applying the input filter.
    * If filter function returns true, the corresponding query is returned, null otherwise
    * 
-   * @param fnCriteria - applied to each query node and must be of the form : (name, args) => <criteria>
+   * @param fnCriteria - applied to each query node and must be of the form : (name, args, parent) => <criteria>
    */
 
   search(fnCriteria) {
@@ -171,7 +190,7 @@ export default class QueryTree {
         return null;
       };
 
-      if (fnCriteria.apply(this, [query.name, query.args])) {
+      if (fnCriteria.apply(this, [query.name, query.args, query.parent])) {
         return query;
       }
       

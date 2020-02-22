@@ -11,49 +11,55 @@
   <script type="application/javascript">
     const options = {containers: ['variable', 'dataset', 'study', 'network']}
 
-    const query = RQL.Parser.parseQuery("variable(or(or(or(in(Mlstr_area.Sociodemographic_economic_characteristics,(Twin,Citizenship)),in(Mlstr_area.Lifestyle_behaviours,Transportation)),in(Mlstr_area.Health_status_functional_limitations,Qual_life)),in(Mlstr_area.Diseases,Blood_immune_dis))),dataset(in(Mica_dataset.className,StudyDataset)),study(in(Mica_study.id,clsa))");
-    const tree1 = new RQL.QueryTree(query, options);
+    function testVisit() {
+      const tree1 = new RQL.QueryTree(query, options);
+      tree1.visit((query) => {
+        console.log(`Visited ${query.name} Parent ${query.parent ? query.parent.name : ""}`);
+      });
+    }
 
-    tree1.visit((query) => {
-      console.log(`Visited ${query.name} Parent ${query.parent ? query.parent.name : ""}`);
-    });
+    function testAddAndDelete() {
+      const tree = new RQL.QueryTree(null, options);
+      const varQ = new RQL.Query('variable');    
+      const andQ = new RQL.Query('and');
+      const inQ = new RQL.Query('in',['Mlstr_additional.Source', 'Questionnaire']);
+      const mQ = new RQL.Query('match', ['DIAB','Mica_variable.name']);
+      const stdQ = new RQL.Query('study');
+      const inQ2= new RQL.Query('in', ['Mica_study.methods-design','cohort_study']);
+      const bQ = new RQL.Query('in', ['Mlstr_area.Lifestyle_behaviours',['Phys_act','Tobacco','Alcohol']]);
+      
+      tree.addQuery(null, varQ);
+      tree.addQuery(varQ, andQ);
+      tree.addQuery(andQ, inQ);
+      tree.addQuery(andQ, mQ);
+      tree.addQuery(andQ, bQ);
 
-
-    const tree = new RQL.QueryTree(null, options);
-
-    const varQ = new RQL.Query('variable');    
-    const andQ = new RQL.Query('and');
-    const inQ = new RQL.Query('in',['Mlstr_additional.Source', 'Questionnaire']);
-    const mQ = new RQL.Query('match', ['DIAB','Mica_variable.name']);
-    const stdQ = new RQL.Query('study');
-    const inQ2= new RQL.Query('in', ['Mica_study.methods-design','cohort_study']);
-    const bQ = new RQL.Query('in', ['Mlstr_area.Lifestyle_behaviours',['Phys_act','Tobacco','Alcohol']]);
-    
-    tree.addQuery(null, varQ);
-    tree.addQuery(varQ, andQ);
-    tree.addQuery(andQ, inQ);
-    tree.addQuery(andQ, mQ);
-    tree.addQuery(andQ, bQ);
-
-    // tree.findAndUpdateQuery((name, args) => 'match' === name, ['yoyo','Mica_variable.name']);
-
-
-    tree.addQuery(null, stdQ);
-    tree.addQuery(stdQ, new RQL.Query('in', ['Mica_study.methods-design', 'cohort_study']));
+      // tree.findAndUpdateQuery((name, args) => 'match' === name, ['yoyo','Mica_variable.name']);
 
 
+      tree.addQuery(null, stdQ);
+      tree.addQuery(stdQ, new RQL.Query('in', ['Mica_study.methods-design', 'cohort_study']));
 
-    // tree.deleteQuery(mQ);
+      console.log(`Tree ${tree.serialize()}`);
 
-    let target = tree.search((name, args) => args.indexOf("DIAB") > -1);
-    tree.findAndUpdateQuery((name, args) => args[1]==='Mica_variable.name', ['YOYO', 'Mica_variable.name']);
-    tree.findAndDeleteQuery((name, args) => args.indexOf('YOYO') > -1);
-    tree.findAndDeleteQuery((name, args) => args.indexOf("Questionnaire") > -1);
-    tree.findAndDeleteQuery((name, args) => args.indexOf("Mlstr_area.Lifestyle_behaviours") > -1);
-    tree.findAndDeleteQuery((name, args) => args.indexOf("cohort_study") > -1);
+      // let target = tree.search((name, args) => args.indexOf("DIAB") > -1);
+      // tree.findAndUpdateQuery((name, args) => args[1]==='Mica_variable.name', ['YOYO', 'Mica_variable.name']);
+      // tree.findAndDeleteQuery((name, args) => args.indexOf('YOYO') > -1);
+      // tree.findAndDeleteQuery((name, args) => args.indexOf("Questionnaire") > -1);
+      tree.findAndDeleteQuery((name, args) => args.indexOf("Mlstr_area.Lifestyle_behaviours") > -1);
+      // tree.findAndDeleteQuery((name, args) => args.indexOf("cohort_study") > -1);
+      console.log(`Tree ${tree.serialize()}`);
+    }
 
-    console.log(tree.serialize());
+    function testFindAndDelete() {
+      // const query = RQL.Parser.parseQuery("variable(limit(0,20),fields(attributes.label.*,variableType,datasetId,datasetAcronym,attributes.Mlstr_area*),sort(variableType,containerId,populationWeight,dataCollectionEventWeight,datasetId,index,name))");
+      const query = RQL.Parser.parseQuery("variable(and(and(in(Mlstr_additional.Source,Questionnaire),match(DIAB,Mica_variable.name)),in(Mlstr_area.Lifestyle_behaviours,(Phys_act,Tobacco,Alcohol)))),study(in(Mica_study.methods-design,cohort_study))");
+      const tree = new RQL.QueryTree(query, options);
+      tree.findAndDeleteQuery((name, args) => args.indexOf('DIAB') > -1);
+      console.log(`Tree ${tree.serialize()}`);
+    }
 
+    testFindAndDelete();
   </script>
 </body>
 </html>
