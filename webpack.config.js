@@ -9,7 +9,6 @@ module.exports = {
   output: {
     filename: 'rql.js',
     library: 'RQL',
-    libraryTarget: 'umd',
     globalObject: 'this',
     path: path.resolve(__dirname, 'dist'),
   },

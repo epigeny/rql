@@ -2,7 +2,7 @@
   "name": "rql",
   "version": "1.0.0",
   "description": "[![Build Status](https://travis-ci.org/persvr/rql.svg?branch=master)](https://travis-ci.org/persvr/rql)",
-  "main": "dist/rql.js",
+  "module": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
