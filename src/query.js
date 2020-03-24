@@ -225,4 +225,14 @@ Query.prototype.normalize = function (options) {
   return result;
 };
 
+/**
+ * Custom 'instanceof' to circumvent the issue of '<obj> instanceof Query' returning false. This happens when two client code import the 'rql' library differently.
+ * NOTE: This is not supported in Internet Explorer.
+ */
+Object.defineProperty(Query, Symbol.hasInstance, {
+  value: function(instance) {
+    return instance && instance.constructor.name === 'Query' && instance.hasOwnProperty('name') && instance.hasOwnProperty('args');
+  }
+})
+
 export default Query;
