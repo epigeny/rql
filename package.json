@@ -1,7 +1,7 @@
 {
   "name": "rql",
   "version": "1.0.0",
-  "description": "[![Build Status](https://travis-ci.org/persvr/rql.svg?branch=master)](https://travis-ci.org/persvr/rql)",
+  "description": "",
   "module": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meek0/rql.git"
+    "url": "git+https://github.com/epigeny/rql.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/meek0/rql/issues"
+    "url": "https://github.com/epigeny/rql/issues"
   },
-  "homepage": "https://github.com/meek0/rql#readme",
+  "homepage": "https://github.com/epigeny/rql#readme",
   "devDependencies": {
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
