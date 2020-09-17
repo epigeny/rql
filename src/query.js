@@ -7,21 +7,24 @@ const arrayMethods = ["forEach", "reduce", "map", "filter", "indexOf", "some", "
 
 function when(value, callback) { callback(value) };
 
-function serializeArgs(array, delimiter) {
+function serializeArgs(array, delimiter, argFilter) {
   var results = [];
   for (var i = 0, l = array.length; i < l; i++) {
-    results.push(queryToString(array[i]));
+    let arg = array[i];
+    if (!argFilter || argFilter(arg)) {
+      results.push(queryToString(array[i], argFilter));
+    }
   }
   return results.join(delimiter);
 }
 
-function queryToString(part) {
+function queryToString(part, argFilter) {
   if (part instanceof Array) {
-    return "(" + serializeArgs(part, ",") + ")";
+    return "(" + serializeArgs(part, ",", argFilter) + ")";
   }
   if (part && part.name && part.args) {
     return [
-      part.name, "(", serializeArgs(part.args, ","), ")"
+      part.name, "(", serializeArgs(part.args, ",", argFilter), ")"
     ].join("");
   }
   return encodeValue(part);
@@ -78,10 +81,10 @@ Query.prototype.toString = function () {
     queryToString(this);
 };
 
-Query.serializeArgs = function(query, separator) {
+Query.serializeArgs = function(query, separator, argFilter) {
   return query.name === "and" ?
-    serializeArgs(query.args, separator ? separator : '&') :
-    queryToString(query);
+    serializeArgs(query.args, separator ? separator : '&', argFilter) :
+    queryToString(query, argFilter);
 }
 
 function updateQueryMethods() {

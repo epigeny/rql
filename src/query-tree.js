@@ -208,8 +208,8 @@ export default class QueryTree {
     return __search.apply(this, [this._root]);    
   }
 
-  serialize() {
-    return Query.serializeArgs(this._root, ',');
+  serialize(argFilter) {
+    return Query.serializeArgs(this._root, ',', argFilter);
   }
 
   asTree(query) {
