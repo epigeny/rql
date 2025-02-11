@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/epigeny/rql#readme",
   "devDependencies": {
-    "webpack": "^4.41.5",
+    "webpack": "^5.97.1",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.10.3"
   }
